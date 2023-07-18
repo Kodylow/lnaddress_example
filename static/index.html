@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <button id="getInvoice">Get Invoice</button>
+    <div id="qrcode"></div>
+    <div id="invoiceString"></div>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+        document.getElementById("getInvoice").addEventListener("click", async function () {
+            const response = await fetch('http://localhost:3030/api/invoice');
+            const data = await response.json();
+            console.log(data);
+
+            // Clear any previous QR code
+            document.getElementById('qrcode').innerHTML = "";
+
+            // Create a new QR Code
+            const qr = new QRCode(document.getElementById("qrcode"), {
+                text: data.pr,
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // also show the invoice as text with a copy button
+            document.getElementById('invoiceString').innerHTML = data.pr;
+        });
+    </script>
+
+</body>
+
+</html>
